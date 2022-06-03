@@ -9,11 +9,11 @@
   <link rel="stylesheet" href="./styles/styles.css" />
   <link rel="shortcut icon" href="favicon.ico">
 
-  <title>Start Reactor</title>
+  <title>Memory Button</title>
 </head>
 
 <body>
-  <h1 id="title">START REACTOR</h1>
+  <h1 id="title">MEMORY BUTTON GAME</h1>
   <div class="container">
     <div class="painel">
       <div class="boxPainel">
@@ -79,13 +79,13 @@
     const startButton = document.getElementById("startButton")
 
     loadButton.addEventListener("click", () => {
-      startReactor.load()
+      memoryButton.load()
       loadButton.style.display = "none"
       startButton.style.display = ""
     })
 
     startButton.addEventListener("click", () => {
-      startReactor.start()
+      memoryButton.start()
       startButton.style.display = "none"
     })
   </script>

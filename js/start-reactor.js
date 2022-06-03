@@ -1,4 +1,4 @@
-startReactor = {
+memoryButton = {
 
     computerCombination: [],
     playerCombination: [],
@@ -23,12 +23,12 @@ startReactor = {
 
         loadAudios() {
 
-            if (typeof(startReactor.audio.start) == "object") return
+            if (typeof(memoryButton.audio.start) == "object") return
 
-            startReactor.audio.start = startReactor.audio.loadAudio(startReactor.audio.start)
-            startReactor.audio.complete = startReactor.audio.loadAudio(startReactor.audio.complete)
-            startReactor.audio.fail = startReactor.audio.loadAudio(startReactor.audio.fail)
-            startReactor.audio.combinations = startReactor.audio.combinations.map ( (audio) => startReactor.audio.loadAudio(audio))
+            memoryButton.audio.start = memoryButton.audio.loadAudio(memoryButton.audio.start)
+            memoryButton.audio.complete = memoryButton.audio.loadAudio(memoryButton.audio.complete)
+            memoryButton.audio.fail = memoryButton.audio.loadAudio(memoryButton.audio.fail)
+            memoryButton.audio.combinations = memoryButton.audio.combinations.map ( (audio) => memoryButton.audio.loadAudio(audio))
 
         }
         
@@ -48,8 +48,8 @@ startReactor = {
 
         turnAllLedsOff() {
             
-            const computerLedPanel = startReactor.interface.computerLedPanel
-            const playerLedPanel = startReactor.interface.playerLedPanel
+            const computerLedPanel = memoryButton.interface.computerLedPanel
+            const playerLedPanel = memoryButton.interface.playerLedPanel
 
             for (var i = 0; i < computerLedPanel.children.length; i++) {
                 computerLedPanel.children[i].classList.remove("ledOn");
@@ -59,17 +59,17 @@ startReactor = {
         },
 
         async start() {
-            return startReactor.audio.start.play()
+            return memoryButton.audio.start.play()
         },
 
         playItem(index, combinationPosition, location = 'computer') {
             
-            const leds = (location == 'computer') ? startReactor.interface.computerLedPanel : startReactor.interface.playerLedPanel
-            const memPanel = startReactor.interface.memoryPanel.children[index]
+            const leds = (location == 'computer') ? memoryButton.interface.computerLedPanel : memoryButton.interface.playerLedPanel
+            const memPanel = memoryButton.interface.memoryPanel.children[index]
 
             memPanel.classList.add("memoryActive")
-            startReactor.interface.turnLedOn(combinationPosition, leds)
-            startReactor.audio.combinations[index].play().then(() => {
+            memoryButton.interface.turnLedOn(combinationPosition, leds)
+            memoryButton.audio.combinations[index].play().then(() => {
                 setTimeout(() => {
                     memPanel.classList.remove("memoryActive")
                 }, 150)
@@ -78,13 +78,13 @@ startReactor = {
 
         endGame(type = "fail") {
             
-            const memPanel = startReactor.interface.memoryPanel
-            const ledPanel = startReactor.interface.computerLedPanel
-            const audio = (type == "complete") ? startReactor.audio.complete : startReactor.audio.fail
+            const memPanel = memoryButton.interface.memoryPanel
+            const ledPanel = memoryButton.interface.computerLedPanel
+            const audio = (type == "complete") ? memoryButton.audio.complete : memoryButton.audio.fail
             const typeClasses = (type == "complete") ? ["playerMemoryComplete", "playerLedComplete"] : ["playerMemoryError", "playerLedError"]
 
-            startReactor.interface.disableButtons()
-            startReactor.interface.turnAllLedsOff()
+            memoryButton.interface.disableButtons()
+            memoryButton.interface.turnAllLedsOff()
 
             audio.play().then(() => {
 
@@ -113,7 +113,7 @@ startReactor = {
 
         enableButtons() {
 
-            const playerMemory = startReactor.interface.playerMemory
+            const playerMemory = memoryButton.interface.playerMemory
             playerMemory.classList.add('playerActive')
 
             for (var i = 0; i < playerMemory.children.length; i++) {
@@ -125,7 +125,7 @@ startReactor = {
 
         disableButtons() { 
 
-            const playerMemory = startReactor.interface.playerMemory
+            const playerMemory = memoryButton.interface.playerMemory
             playerMemory.classList.remove('playerActive')
 
             for (var i = 0; i < playerMemory.children.length; i++) {
@@ -141,16 +141,16 @@ startReactor = {
     async load() {
         return new Promise(resolve => {
             console.log("Loading Game...")
-            startReactor.audio.loadAudios()
+            memoryButton.audio.loadAudios()
 
-            const playerMemory  = startReactor.interface.playerMemory
-            const memory = startReactor.interface.playerMemoryButtons
+            const playerMemory  = memoryButton.interface.playerMemory
+            const memory = memoryButton.interface.playerMemoryButtons
             
             Array.prototype.forEach.call(memory, (element) => {
 
                 element.addEventListener("click", () => {
                 if (playerMemory.classList.contains("playerActive")) {
-                    startReactor.play(parseInt(element.dataset.memory))
+                    memoryButton.play(parseInt(element.dataset.memory))
                     console.log("O valor do elemento clicado é: " + element.dataset.memory)
 
                     element.style.animation = "playermemoryClick .4s"
@@ -165,12 +165,12 @@ startReactor = {
      },
     start() {
 
-        startReactor.computerCombination = startReactor.createCombination()
-        startReactor.computerCombinationPosition = 1
-        startReactor.playerCombination = []
-        startReactor.interface.start().then(() => {
+        memoryButton.computerCombination = memoryButton.createCombination()
+        memoryButton.computerCombinationPosition = 1
+        memoryButton.playerCombination = []
+        memoryButton.interface.start().then(() => {
             setTimeout(() => {
-                startReactor.playCombination()
+                memoryButton.playCombination()
             }, 500)
         })
 
@@ -179,8 +179,8 @@ startReactor = {
     createCombination() {
 
         let newCombination = []
-        for (let n = 0; n < startReactor.combinationMaxPosition; n++){
-            const position = Math.floor((Math.random() * startReactor.memoryMaxCombination) + 1)
+        for (let n = 0; n < memoryButton.combinationMaxPosition; n++){
+            const position = Math.floor((Math.random() * memoryButton.memoryMaxCombination) + 1)
             newCombination.push(position-1)
         }
         return newCombination
@@ -189,34 +189,34 @@ startReactor = {
 
     play(index) {
 
-        startReactor.interface.playItem(index, startReactor.playerCombination.length, 'player')
-        startReactor.playerCombination.push(index)
+        memoryButton.interface.playItem(index, memoryButton.playerCombination.length, 'player')
+        memoryButton.playerCombination.push(index)
 
-        if (startReactor.isTheRightCombination(startReactor.playerCombination.length)) {
+        if (memoryButton.isTheRightCombination(memoryButton.playerCombination.length)) {
             
-            if (startReactor.playerCombination.length == startReactor.combinationMaxPosition) {
-                startReactor.interface.endGame("complete")
+            if (memoryButton.playerCombination.length == memoryButton.combinationMaxPosition) {
+                memoryButton.interface.endGame("complete")
                 setTimeout(() => {
-                    startReactor.start()
+                    memoryButton.start()
                 }, 1200)
                 return
             }
 
-            if (startReactor.playerCombination.length == startReactor.computerCombinationPosition) {
-                startReactor.computerCombinationPosition++
+            if (memoryButton.playerCombination.length == memoryButton.computerCombinationPosition) {
+                memoryButton.computerCombinationPosition++
                 setTimeout(() => {
-                        startReactor.playCombination()
+                        memoryButton.playCombination()
                 }, 1200)
                 return
             }
 
         } else {
 
-            startReactor.interface.endGame("fail")
+            memoryButton.interface.endGame("fail")
             document.getElementById("title").textContent = "Você é o impostor"
             setTimeout(() => {
                 document.getElementById("title").textContent = "START REACTOR"
-                startReactor.start()
+                memoryButton.start()
             }, 1400)
             return
         }
@@ -224,28 +224,28 @@ startReactor = {
 
     playCombination() {
 
-        startReactor.playerCombination = []
-        startReactor.interface.disableButtons()
-        startReactor.interface.turnAllLedsOff()
+        memoryButton.playerCombination = []
+        memoryButton.interface.disableButtons()
+        memoryButton.interface.turnAllLedsOff()
 
-        for (let i = 0; i <= startReactor.computerCombinationPosition - 1; i++){
+        for (let i = 0; i <= memoryButton.computerCombinationPosition - 1; i++){
 
             setTimeout(() => {
-                startReactor.interface.playItem(startReactor.computerCombination[i], i)
+                memoryButton.interface.playItem(memoryButton.computerCombination[i], i)
             }, 400 * (i+1))
         }
 
         setTimeout(() => {
-            startReactor.interface.turnAllLedsOff()
-            startReactor.interface.enableButtons()
-        }, 600 * startReactor.computerCombinationPosition)
+            memoryButton.interface.turnAllLedsOff()
+            memoryButton.interface.enableButtons()
+        }, 600 * memoryButton.computerCombinationPosition)
 
      },
     
     isTheRightCombination(position) {
         
-        let computerCombination = startReactor.computerCombination.slice(0, position)
-        return ( computerCombination.toString() == startReactor.playerCombination.toString())
+        let computerCombination = memoryButton.computerCombination.slice(0, position)
+        return ( computerCombination.toString() == memoryButton.playerCombination.toString())
 
     },
 
